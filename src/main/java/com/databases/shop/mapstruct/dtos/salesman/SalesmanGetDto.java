@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -23,5 +24,13 @@ public class SalesmanGetDto {
     @JsonProperty("contacts")
     @NotNull
     private Contacts contacts;
+
+    @JsonProperty("dateOfBirth")
+    @NotNull
+    private Date dateOfBirth;
+
+    @JsonProperty("dateOfHiring")
+    @NotNull
+    private Date dateOfHiring;
 
 }
