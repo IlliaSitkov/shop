@@ -25,7 +25,7 @@ public class Product {
     private Long articul;
 
     @NotNull
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 100)
     private String name;
 
     @NotNull

@@ -21,27 +21,27 @@ public class Address {
 
     @NotBlank
     @Max(25)
-    @Column(name = "addr_country")
+    @Column(name = "addr_country", length = 25)
     private String country;
 
     @NotBlank
     @Max(25)
-    @Column(name = "addr_region")
+    @Column(name = "addr_region", length = 25)
     private String region;
 
     @NotBlank
-    @Max(25)
-    @Column(name = "addr_city")
+    @Max(40)
+    @Column(name = "addr_city", length = 40)
     private String city;
 
     @NotBlank
     @Max(60)
-    @Column(name = "addr_street")
+    @Column(name = "addr_street", length = 60)
     private String street;
 
     @NotBlank
     @Max(8)
-    @Column(name = "addr_apartment")
+    @Column(name = "addr_apartment", length = 8)
     private String apartment;
 
     public Address(String country, String region, String city, String street, String apartment) {

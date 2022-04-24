@@ -15,15 +15,15 @@ public class PersonName {
 
     @NotBlank
     @Max(15)
-    @Column(name = "person_name")
+    @Column(name = "person_name", length = 15)
     private String name;
 
-    @Column(name = "person_lastname")
+    @Column(name = "person_lastname", length = 15)
     @Max(15)
     private String lastname;
 
     @NotBlank
-    @Column(name = "person_surname")
+    @Column(name = "person_surname", length = 15)
     @Max(15)
     private String surname;
 

@@ -19,12 +19,12 @@ public class Contacts {
 
     @NotBlank
     @Max(25)
-    @Column(name = "contacts_phone_number")
+    @Column(name = "contacts_phone_number", length = 25)
     private String phoneNumber;
 
     @NotBlank
     @Max(50)
-    @Column(name = "contacts_email")
+    @Column(name = "contacts_email", length = 50)
     private String email;
 
     public Contacts(String phoneNumber, String email) {

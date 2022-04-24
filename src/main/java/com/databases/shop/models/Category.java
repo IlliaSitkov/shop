@@ -23,11 +23,11 @@ public class Category {
     private Long id;
 
     @NotNull
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, length = 100)
     private String name;
 
     @NotNull
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String description;
 
     @OneToMany(mappedBy = "category")

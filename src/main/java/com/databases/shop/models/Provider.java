@@ -23,7 +23,7 @@ public class Provider {
     private Long edrpou;
 
     @NotNull
-    @Column(nullable = false)
+    @Column(nullable = false, length = 50)
     private String name;
 
     //Column?
