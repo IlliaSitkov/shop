@@ -101,7 +101,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void deleteById(Long id) {
-        orderRepository.deleteById(id);
+        orderRepository.delete(id);
+//        orderRepository.deleteById(id);
     }
 
     @Override

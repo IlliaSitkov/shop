@@ -3,9 +3,12 @@ package com.databases.shop.repositories;
 import com.databases.shop.models.Salesman;
 import com.databases.shop.repositories.queryinterfaces.MinMaxValues;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import javax.transaction.Transactional;
 
 @Repository
 public interface SalesmanRepository extends JpaRepository<Salesman,Long> {
@@ -48,6 +51,12 @@ public interface SalesmanRepository extends JpaRepository<Salesman,Long> {
 
     @Query(value = "SELECT * FROM salesman WHERE contacts_email LIKE :email", nativeQuery = true)
     Salesman getByEmail(@Param("email")String email);
+
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM salesman WHERE id = :id", nativeQuery = true)
+    void delete(@Param("id") Long id);
 
 
 //    @Query(value =

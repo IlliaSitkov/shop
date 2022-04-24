@@ -6,9 +6,11 @@ import com.databases.shop.repositories.queryinterfaces.MinMaxValues;
 import com.databases.shop.repositories.queryinterfaces.OrderGroupReportValues;
 import com.databases.shop.repositories.queryinterfaces.OrderReportValues;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -166,7 +168,10 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
     Date getMaxDate();
 
 
-
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM order_t WHERE id = :id", nativeQuery = true)
+    void delete(@Param("id") Long id);
 }
 
 

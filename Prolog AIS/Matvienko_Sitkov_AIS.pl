@@ -60,12 +60,7 @@ salesman('600000000',full_name('Shevchenko','Valiria','Borysivna')).
 salesman('700000000',full_name('Romanenko','Ivan','Antonovych')).
 
 % предикат замовлення(номер_замовлення,іпн_продавця,іпн_покупця,дата_замовлення,статус_замовлення)
-% First salesman for some time has one order with one order_row
-%order(1,'100000000','000000001',date(30,1,2022),done).
-%order(2,'100000000','000000001',date(31,1,2022),done).
 order(3,'100000000','000000002',date(1,2,2022),in_progress).
-%order(4,'100000000','000000002',date(2,2,2022),in_progress).
-%order(5,'100000000','000000003',date(5,2,2022),new).
 
 order(6,'200000000','000000004',date(31,1,2022),new).
 order(7,'200000000','000000005',date(1,2,2022),done).
@@ -112,9 +107,6 @@ order_row(2, 5648, 4).
 order_row(2, 2314, 1).
 order_row(2, 1234, 3).
 
-% First salesman for some time has one order with one order_row
-%order_row(3, 2433, 1).
-%order_row(3, 2321, 1).
 order_row(3, 5643, 2).
 
 order_row(4, 8764, 3).
@@ -126,8 +118,8 @@ order_row(5, 5648, 2).
 order_row(5, 2314, 1).
 order_row(5, 2433, 1).
 
-order_row(6, 5648, 3). % 3526
-order_row(6, 8764, 1). %
+order_row(6, 5648, 3).
+order_row(6, 8764, 1).
 
 order_row(7, 3421, 4).
 order_row(7, 5643, 1).
@@ -137,9 +129,6 @@ order_row(7, 4532, 1).
 order_row(7, 6234, 1).
 order_row(7, 6165, 1).
 
-% 8, 31 - orders for 000000006
-%order_row(8, 9864, 5).%
-%order_row(8, 9876, 2).%
 order_row(8, 8764, 2).
 
 order_row(9, 9864, 8).
@@ -148,7 +137,6 @@ order_row(9, 2433, 8).
 
 order_row(10, 5643, 2).
 order_row(10, 8764, 2).
-%order_row(10, 1234, 2).%
 
 order_row(11, 5643, 2).
 order_row(11, 9864, 3).
@@ -180,10 +168,9 @@ order_row(18, 5643, 2).
 order_row(18, 2433, 3).
 order_row(18, 9876, 1).
 
-order_row(19, 3421, 4).%
-order_row(19, 9876, 4).%
-order_row(19, 1234, 1).%
-%order_row(19, 5643, 3).%
+order_row(19, 3421, 4).
+order_row(19, 9876, 4).
+order_row(19, 1234, 1).
 
 order_row(20, 2433, 2).
 order_row(20, 2321, 1).
@@ -226,8 +213,7 @@ order_row(29, 3421, 4).
 order_row(30, 4532, 1).
 order_row(30, 2314, 1).
 
-order_row(31, 8764, 4).%
-%order_row(31, 4532, 4).%
+order_row(31, 8764, 4).
 
 order_row(32, 5643, 2).
 order_row(32, 2314, 6).

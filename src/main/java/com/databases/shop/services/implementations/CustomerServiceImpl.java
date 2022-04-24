@@ -74,7 +74,7 @@ public class CustomerServiceImpl implements CustomerService {
                     orderRepository.save(order);
                 }
             }
-            customerRepository.deleteById(id);
+            customerRepository.delete(id);
             return true;
             /*Customer c = customerRepository.getById(id);
             try {

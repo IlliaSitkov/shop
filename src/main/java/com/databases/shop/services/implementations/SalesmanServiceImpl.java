@@ -139,7 +139,7 @@ public class SalesmanServiceImpl implements SalesmanService {
             try {
                 adminService.deleteUserAccountByEmail(s.getContacts().getEmail());
                 adminService.deleteUserFromFirestore(s.getContacts().getEmail());
-                salesmanRepository.deleteById(id);
+                salesmanRepository.delete(id);
                 return true;
             } catch (Exception e) {
                 e.printStackTrace();
