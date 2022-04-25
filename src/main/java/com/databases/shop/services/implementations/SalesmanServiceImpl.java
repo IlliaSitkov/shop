@@ -5,15 +5,11 @@ import com.databases.shop.exceptions.salesman.SalesmanRegistrationException;
 import com.databases.shop.mapstruct.dtos.filterBoundsDtos.SalesmanFilterBoundsDto;
 import com.databases.shop.mapstruct.dtos.salesman.SalesmanGetDto;
 import com.databases.shop.mapstruct.dtos.salesman.SalesmanPostDto;
-import com.databases.shop.mapstruct.dtos.user.UserGetDto;
 import com.databases.shop.mapstruct.mappers.SalesmanMapper;
 import com.databases.shop.models.Order;
-import com.databases.shop.models.OrderStatus;
 import com.databases.shop.models.Salesman;
-import com.databases.shop.repositories.CustomerRepository;
-import com.databases.shop.repositories.OrderRepository;
-import com.databases.shop.repositories.SalesmanFilterRepository;
-import com.databases.shop.repositories.SalesmanRepository;
+import com.databases.shop.models.Telephone;
+import com.databases.shop.repositories.*;
 import com.databases.shop.repositories.queryinterfaces.MinMaxValues;
 import com.databases.shop.services.interfaces.AdminService;
 import com.databases.shop.services.interfaces.SalesmanService;
@@ -21,12 +17,18 @@ import com.databases.shop.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Repository
 public class SalesmanServiceImpl implements SalesmanService {
 
 
     @Autowired
     private SalesmanRepository salesmanRepository;
+
+    @Autowired
+    private TelephoneRepository telephoneRepository;
 
     @Autowired
     private SalesmanFilterRepository salesmanFilterRepository;
@@ -57,31 +59,24 @@ public class SalesmanServiceImpl implements SalesmanService {
     public Salesman save(Salesman salesman) {
         utils.processSalesman(salesman);
         utils.checkPersonName(salesman.getPersonName());
-        utils.checkContacts(salesman.getContacts());
+        utils.checkEmail(salesman.getEmail());
+        salesman.getTelephones().forEach(t -> utils.checkPhoneNumber(t.getTelNumber()));
         utils.checkDates(salesman.getDateOfBirth(), salesman.getDateOfHiring());
         return salesmanRepository.save(salesman);
     }
 
-//    @Override
-//    public Salesman save(Salesman salesman) {
-//        utils.processSalesman(salesman);
-//        utils.checkPersonName(salesman.getPersonName());
-//        utils.checkContacts(salesman.getContacts());
-//        if (usersWithEmailExist(salesman.getContacts().getEmail())) {
-//            throw new SalesmanWithEmailAlreadyExistsException(salesman.getContacts().getEmail());
-//        }
-//        return salesmanRepository.save(salesman);
-//    }
 
     public SalesmanGetDto saveSalesmanPostDto(SalesmanPostDto salesmanPostDto) {
         try {
-            adminService.registerUser(salesmanPostDto.getContacts().getEmail(),salesmanPostDto.getPassword());
-            adminService.saveUserToFirestore(salesmanPostDto.getContacts().getEmail(),salesmanPostDto.getRole());
-            return salesmanMapper.salesmanToSalesmanGetDto(
-                    save(salesmanMapper.salesmanSaveDtoToSalesman(
-                                    salesmanMapper.salesmanPostDtoToSalesmanSaveDto(salesmanPostDto))));
-
+            Salesman salesmanToSave = salesmanMapper.salesmanSaveDtoToSalesman(salesmanMapper.salesmanPostDtoToSalesmanSaveDto(salesmanPostDto));
+            Set<Telephone> telephones = salesmanToSave.getTelephones();
+            telephones.forEach(t -> t.setSalesman(salesmanToSave));
+            Salesman salesman = save(salesmanToSave);
+            adminService.registerUser(salesmanPostDto.getEmail(),salesmanPostDto.getPassword());
+            adminService.saveUserToFirestore(salesmanPostDto.getEmail(),salesmanPostDto.getRole());
+            return salesmanMapper.salesmanToSalesmanGetDto(salesman);
         } catch (Exception e) {
+            e.printStackTrace();
             throw new SalesmanRegistrationException();
         }
     }
@@ -116,15 +111,27 @@ public class SalesmanServiceImpl implements SalesmanService {
     public Salesman update(Long id, Salesman salesman) {
         salesman.setPersonName(utils.processPersonName(salesman.getPersonName()));
         utils.checkPersonName(salesman.getPersonName());
-        utils.checkPhoneNumber(salesman.getContacts().getPhoneNumber());
+        salesman.getTelephones().forEach(t -> utils.checkPhoneNumber(t.getTelNumber()));
         utils.checkDates(salesman.getDateOfBirth(), salesman.getDateOfHiring());
+        deleteTelephonesNotInList(salesman.getTelephones());
 
         Salesman s = salesmanRepository.findById(id).orElseThrow(() -> new NoSalesmanWithSuchIdException(id));
+        salesman.getTelephones().forEach(t -> t.setSalesman(s));
         s.setPersonName(salesman.getPersonName());
-        s.getContacts().setPhoneNumber(salesman.getContacts().getPhoneNumber());
+        s.setTelephones(salesman.getTelephones());
         s.setDateOfBirth(salesman.getDateOfBirth());
         s.setDateOfHiring(salesman.getDateOfHiring());
         return salesmanRepository.save(s);
+    }
+
+    private void deleteTelephonesNotInList(Set<Telephone> goodTelephones) {
+        Iterable<Telephone> telephones = telephoneRepository.findAll();
+        Set<String> ids = goodTelephones.stream().map(Telephone::getTelNumber).collect(Collectors.toSet());
+        telephones.forEach(t -> {
+            if (!ids.contains(t.getTelNumber())) {
+                telephoneRepository.deleteById(t.getTelNumber());
+            }
+        });
     }
 
     @Override
@@ -132,11 +139,6 @@ public class SalesmanServiceImpl implements SalesmanService {
         return salesmanRepository.existsByEmail(email);
     }
 
-//    @Override
-//    public boolean usersWithEmailExist(String email) {
-//        return salesmanRepository.existsByEmail(email) ||
-//                customerRepository.existsByEmail(email);
-//    }
 
     @Override
     public boolean delete(Long id) {
@@ -147,8 +149,8 @@ public class SalesmanServiceImpl implements SalesmanService {
             }
             Salesman s = salesmanRepository.getById(id);
             try {
-                adminService.deleteUserAccountByEmail(s.getContacts().getEmail());
-                adminService.deleteUserFromFirestore(s.getContacts().getEmail());
+                adminService.deleteUserAccountByEmail(s.getEmail());
+                adminService.deleteUserFromFirestore(s.getEmail());
                 salesmanRepository.delete(id);
                 return true;
             } catch (Exception e) {

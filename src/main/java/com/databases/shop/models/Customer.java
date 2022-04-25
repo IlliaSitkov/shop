@@ -29,7 +29,6 @@ public class Customer {
     private Address address;
 
     @OneToMany(mappedBy = "customer")
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Set<Order> orders = new HashSet<>();
 
     @NotNull

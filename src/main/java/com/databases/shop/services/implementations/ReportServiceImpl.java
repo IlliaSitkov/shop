@@ -57,7 +57,7 @@ public class ReportServiceImpl implements ReportService {
 
             BaseFont baseFont = BaseFont.createFont("src/main/resources/static/SFNSRounded.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
 
-            Font headerFont = new Font(baseFont, 12);
+            Font headerFont = new Font(baseFont, 12);//, Font.BOLD);
             Font textFont = new Font(baseFont, 10);
 
             Paragraph p = new Paragraph("Звіт по замовленнях за період з " + dateStart + " до " + dateEnd + "\n", headerFont);
@@ -103,6 +103,8 @@ public class ReportServiceImpl implements ReportService {
             table.setWidthPercentage(100);
             table.setSpacingAfter(smallRowGap);
 
+            document.add(table);
+
             Paragraph tableHeader1 = new Paragraph("Інформація про всі замовлення", headerFont);
             tableHeader1.setAlignment(Element.ALIGN_CENTER);
             tableHeader1.setSpacingAfter(smallRowGap);
@@ -116,7 +118,6 @@ public class ReportServiceImpl implements ReportService {
 
             table1.setWidthPercentage(100);
 
-            document.add(table);
             document.add(table1);
 
             document.close();
@@ -146,7 +147,7 @@ public class ReportServiceImpl implements ReportService {
             document.open();
 
             BaseFont baseFont = BaseFont.createFont("src/main/resources/static/SFNSRounded.ttf", BaseFont.IDENTITY_H, BaseFont.NOT_EMBEDDED);
-            Font headerFont = new Font(baseFont, 16); //, Font.BOLD);
+            Font headerFont = new Font(baseFont, 16);//, Font.BOLD);
             Font textFont = new Font(baseFont, 14);
 
             Paragraph p = new Paragraph("Звіт по товарах за період з " + dateStart + " до " + dateEnd + "\n", headerFont);

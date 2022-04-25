@@ -53,13 +53,30 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public Customer update(Long id, Customer customer) {
         customer.setPersonName(utils.processPersonName(customer.getPersonName()));
+        customer.setAddress(utils.processAddress(customer.getAddress()));
+        customer.getContacts().setPhoneNumber(utils.processString(customer.getContacts().getPhoneNumber()));
+
         utils.checkPersonName(customer.getPersonName());
         utils.checkPhoneNumber(customer.getContacts().getPhoneNumber());
+        utils.checkAddress(customer.getAddress());
 
         Customer c = customerRepository.findById(id).orElseThrow(() -> new NoCustomerWithSuchIdException(id));
         c.setPersonName(customer.getPersonName());
         c.getContacts().setPhoneNumber(customer.getContacts().getPhoneNumber());
-        return customerRepository.save(c);
+        c.setAddress(customer.getAddress());
+
+        customerRepository.updateCustomer(id,
+                c.getPersonName().getName(),
+                c.getPersonName().getLastname(),
+                c.getPersonName().getSurname(),
+                c.getContacts().getPhoneNumber(),
+                c.getAddress().getCountry(),
+                c.getAddress().getRegion(),
+                c.getAddress().getCity(),
+                c.getAddress().getStreet(),
+                c.getAddress().getApartment());
+//        return c;
+        return customerRepository.findById(id).get();
     }
 
     @Override
@@ -76,15 +93,6 @@ public class CustomerServiceImpl implements CustomerService {
             }
             customerRepository.delete(id);
             return true;
-            /*Customer c = customerRepository.getById(id);
-            try {
-                adminService.deleteUserAccountByEmail(c.getContacts().getEmail());
-                adminService.deleteUserFromFirestore(c.getContacts().getEmail());
-                customerRepository.deleteById(id);
-                return true;
-            } catch (Exception e) {
-                return false;
-            }*/
         };
         return false;
     }

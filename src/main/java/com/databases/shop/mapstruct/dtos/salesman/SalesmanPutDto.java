@@ -9,6 +9,7 @@ import com.databases.shop.mapstruct.dtos.contacts.ContactsPutDto;
 
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -18,9 +19,9 @@ public class SalesmanPutDto {
     @NotNull
     private PersonName personName;
 
-    @JsonProperty("contacts")
+    @JsonProperty("tel_nums")
     @NotNull
-    private ContactsPutDto contacts;
+    private Set<TelephoneDto> telephones;
 
     @JsonProperty("dateOfBirth")
     @NotNull
@@ -30,4 +31,13 @@ public class SalesmanPutDto {
     @NotNull
     private Date dateOfHiring;
 
+    @Override
+    public String toString() {
+        return "SalesmanPutDto{" +
+                "personName=" + personName +
+                ", telephones=" + telephones +
+                ", dateOfBirth=" + dateOfBirth +
+                ", dateOfHiring=" + dateOfHiring +
+                '}';
+    }
 }

@@ -11,10 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
@@ -78,6 +75,13 @@ public class Utils {
                 || !contacts.getEmail().matches("[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}");
     }
 
+    public void checkEmail(String email) {
+        if (email == null || email.isEmpty()
+                || !email.matches("[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}")) {
+            throw new InvalidContactsException(Values.INVALID_CONTACTS);
+        }
+    }
+
     public boolean isValidPhoneNumber(String phone) {
         return phone.matches("[(]?\\d+[)]?[-\\s]?\\d+[-\\s]?\\d+([-\\s]\\d+)?");
         //return true;
@@ -118,7 +122,10 @@ public class Utils {
     }
 
     public void processSalesman(Salesman salesman) {
-        salesman.setContacts(processContacts(salesman.getContacts()));
+        Set<Telephone> telephones = salesman.getTelephones();
+        telephones.forEach(t -> t.setTelNumber(processString(t.getTelNumber())));
+        salesman.setTelephones(telephones);
+        salesman.setEmail(processString(salesman.getEmail()));
         salesman.setPersonName(processPersonName(salesman.getPersonName()));
     }
 

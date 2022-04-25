@@ -2,6 +2,7 @@ package com.databases.shop.mapstruct.mappers;
 
 import com.databases.shop.mapstruct.dtos.salesman.*;
 import com.databases.shop.models.Salesman;
+import com.databases.shop.models.Telephone;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
@@ -20,6 +21,11 @@ public interface SalesmanMapper {
     Salesman salesmanPutDtoToSalesman(SalesmanPutDto salesmanPutDto);
 
     Salesman salesmanSaveDtoToSalesman(SalesmanSaveDto salesmanSaveDto);
+
+    TelephoneDto telephoneToTelephoneDto(Telephone telephone);
+    Telephone telephoneDtoToTelephone(TelephoneDto telephone);
+
+
 
 
 

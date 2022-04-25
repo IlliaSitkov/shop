@@ -20,13 +20,13 @@ import javax.validation.constraints.Size;
 public class Address {
 
     @NotBlank
-    @Max(25)
-    @Column(name = "addr_country", length = 25)
+    @Max(40)
+    @Column(name = "addr_country", length = 40)
     private String country;
 
     @NotBlank
-    @Max(25)
-    @Column(name = "addr_region", length = 25)
+    @Max(40)
+    @Column(name = "addr_region", length = 40)
     private String region;
 
     @NotBlank

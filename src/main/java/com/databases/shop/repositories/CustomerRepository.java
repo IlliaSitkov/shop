@@ -17,25 +17,6 @@ public interface CustomerRepository extends JpaRepository<Customer,Long> {
             "FROM Customer c")
     Iterable<Customer> getAll();
 
-//    @Query("SELECT case when count(c)> 0 then true else false end FROM Customer c WHERE c.contacts.email LIKE :email")
-//    boolean existsByEmail(@Param("email") String email);
-
-//my version
-//    @Query(value =
-//            "SELECT COALESCE(MIN(avgCost),0) AS minValue, COALESCE(MAX(avgCost),0) AS maxValue\n" +
-//            "FROM (\n" +
-//            "         SELECT AVG(COALESCE(order_cost,0)) AS avgCost\n" +
-//            "         FROM (\n" +
-//            "                  SELECT customer_id, COALESCE(SUM(prod_quantity * prod_price), 0) AS order_cost\n" +
-//            "                  FROM order_t LEFT OUTER JOIN product_in_order ON order_id = order_t.id\n" +
-//            "                  WHERE status = 'DONE'\n" +
-//            "                  GROUP BY id, customer_id\n" +
-//            "              ) T RIGHT OUTER JOIN customer ON id = T.customer_id\n" +
-//            "         GROUP BY id\n" +
-//            "     ) T1", nativeQuery = true)
-//    MinMaxValues getMinMaxAvgOrderCost();
-
-
 
     @Query(value =
             "SELECT ROUND(COALESCE(MIN(COALESCE(CAST(avgCost AS numeric),0)),0),2) AS minValue, ROUND(COALESCE(MAX(COALESCE(CAST(avgCost AS numeric),0)),0),2) AS maxValue\n" +
@@ -56,11 +37,11 @@ public interface CustomerRepository extends JpaRepository<Customer,Long> {
 
     @Query(value =
             "SELECT COALESCE(MIN(COALESCE(AllQuants.prod_quant_customer,0)),0) AS minValue, COALESCE(MAX(COALESCE(AllQuants.prod_quant_customer,0)),0) AS maxValue\n" +
-            "FROM customer LEFT OUTER JOIN (\n" +
-            "         SELECT customer_id, SUM(prod_quantity) AS prod_quant_customer\n" +
-            "         FROM order_t INNER JOIN product_in_order pio on order_t.id = pio.order_id\n" +
-            "         WHERE status = 'DONE'\n" +
-            "         GROUP BY customer_id) AllQuants ON customer.id = AllQuants.customer_id", nativeQuery = true)
+                    "FROM customer LEFT OUTER JOIN (\n" +
+                    "         SELECT customer_id, SUM(prod_quantity) AS prod_quant_customer\n" +
+                    "         FROM order_t INNER JOIN product_in_order pio on order_t.id = pio.order_id\n" +
+                    "         WHERE status = 'DONE'\n" +
+                    "         GROUP BY customer_id) AllQuants ON customer.id = AllQuants.customer_id", nativeQuery = true)
     MinMaxValues getMinMaxOverallQuantity();
 
 
@@ -74,4 +55,17 @@ public interface CustomerRepository extends JpaRepository<Customer,Long> {
     @Transactional
     @Query(value = "DELETE FROM customer WHERE id = :id", nativeQuery = true)
     void delete(@Param("id") Long id);
+
+
+    @Transactional
+    @Modifying
+    @Query(value =
+        "UPDATE customer\n" +
+        "SET person_name = :name, person_lastname = :lastname, person_surname = :surname,\n" +
+        "addr_country = :country, addr_region = :region, addr_city = :city, addr_street = :street,\n" +
+        "addr_apartment = :apartment, contacts_phone_number = :phone\n" +
+        "WHERE id = :id", nativeQuery = true)
+    void updateCustomer(@Param("id") Long id, @Param("name")String name, @Param("lastname")String lastname,@Param("surname") String surname,@Param("phone") String phone,
+                        @Param("country") String country,@Param("region") String region,@Param("city") String city, @Param("street")String street,@Param("apartment") String apartment);
+
 }

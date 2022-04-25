@@ -18,15 +18,6 @@ import java.util.List;
 public interface OrderRepository extends JpaRepository<Order,Long> {
 
 
-//    @Query(value =
-//            "SELECT COALESCE(MIN(COALESCE(prodNum,0)),0) AS minValue, COALESCE(MAX(COALESCE(prodNum,0)),0) AS maxValue\n" +
-//            "FROM order_t LEFT OUTER JOIN\n" +
-//            "     (\n" +
-//            "         SELECT order_id, COUNT(*) AS prodNum\n" +
-//            "         FROM product_in_order\n" +
-//            "         GROUP BY order_id\n" +
-//            "     ) P ON order_t.id = P.order_id", nativeQuery = true)
-//    MinMaxValues getMinMaxProdNameNumber();
 
     @Query(value =
             "SELECT COALESCE(MIN(prodNum),0) AS minValue, COALESCE(MAX(prodNum),0) AS maxValue\n" +
@@ -39,15 +30,6 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
     MinMaxValues getMinMaxProdNameNumber(@Param("customerId") Long customerId, @Param("salesmanId") Long salesmanId);
 
 
-//    @Query(value =
-//            "SELECT COALESCE(MIN(COALESCE(catNum,0)),0) AS minValue, COALESCE(MAX(COALESCE(catNum,0)),0) AS maxValue\n" +
-//            "FROM order_t LEFT OUTER JOIN (\n" +
-//            "    SELECT order_id, COUNT(DISTINCT category_fk) AS catNum\n" +
-//            "    FROM product_in_order INNER JOIN product on product_in_order.product_articul = product.articul\n" +
-//            "    GROUP BY product_in_order.order_id\n" +
-//            ") T ON order_t.id = T.order_id", nativeQuery = true)
-//    MinMaxValues getMinMaxCategoryNumber();
-
     @Query(value =
             "SELECT COALESCE(MIN(catNum),0) AS minValue, COALESCE(MAX(catNum),0) AS maxValue\n" +
             "FROM (SELECT COUNT(DISTINCT category_fk) AS catNum\n" +
@@ -58,16 +40,6 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
             "        AND (:salesmanId < 0 OR :salesmanId = salesman_id OR salesman_id IS NULL)\n" +
             "      GROUP BY id) T", nativeQuery = true)
     MinMaxValues getMinMaxCategoryNumber(@Param("customerId") Long customerId, @Param("salesmanId") Long salesmanId);
-
-
-//    @Query(value =
-//            "SELECT COALESCE(MIN(COALESCE(ordCost,0)),0) AS minValue, COALESCE(MAX(COALESCE(ordCost,0)),0) AS maxValue\n" +
-//            "FROM order_t LEFT OUTER JOIN (\n" +
-//            "    SELECT order_id, SUM(prod_quantity*prod_price) AS ordCost\n" +
-//            "    FROM product_in_order\n" +
-//            "    GROUP BY order_id\n" +
-//            ") T ON order_t.id = T.order_id", nativeQuery = true)
-//    MinMaxValues getMinMaxCost();
 
     @Query(value =
             "SELECT ROUND(COALESCE(MIN(CAST(ordCost AS numeric)),0),2) AS minValue, ROUND(COALESCE(MAX(CAST(ordCost AS numeric)),0),2) AS maxValue\n" +
@@ -118,7 +90,6 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
             "FROM (product_in_order INNER JOIN product ON product_articul = articul)\n" +
             "    INNER JOIN order_t ON id = order_id\n" +
             "    WHERE date_created BETWEEN :dateStart AND :dateEnd\n" +
-//            "WHERE date_created BETWEEN :dateStart AND :dateEnd\n" +
             "GROUP BY id\n" +
             "ORDER BY id", nativeQuery = true)
     Iterable<OrderReportValues> getOrderReportValues(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd);
@@ -177,6 +148,17 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
     @Transactional
     @Query(value = "DELETE FROM order_t WHERE id = :id", nativeQuery = true)
     void delete(@Param("id") Long id);
+
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE order_t SET status = :status, date_created = :date WHERE id = :id", nativeQuery = true)
+    void updateOrderStatusAndDate(@Param("id") Long orderId, @Param("status") String newStatus, @Param("date") Date date);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE order_t SET status = :status, date_created = :date, salesman_id = :salesmanId WHERE id = :id", nativeQuery = true)
+    void updateOrder(@Param("id") Long orderId, @Param("status") String newStatus, @Param("date") Date date, @Param("salesmanId") Long salesmanId);
 }
 
 

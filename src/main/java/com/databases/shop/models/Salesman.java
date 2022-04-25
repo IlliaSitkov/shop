@@ -26,8 +26,12 @@ public class Salesman {
     private PersonName personName;
 
     @NotNull
-    @Embedded
-    private Contacts contacts;
+    @OneToMany(mappedBy = "salesman", cascade = CascadeType.ALL)
+    private Set<Telephone> telephones = new HashSet<>();
+
+    @NotBlank
+    @Column(name = "salesman_email", length = 100)
+    private String email;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date_of_birth", nullable = false)
@@ -38,7 +42,6 @@ public class Salesman {
     private Date dateOfHiring;
 
     @OneToMany(mappedBy = "salesman")
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Set<Order> orders = new HashSet<>();
 
 }

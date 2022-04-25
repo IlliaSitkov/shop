@@ -102,7 +102,6 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void deleteById(Long id) {
         orderRepository.delete(id);
-//        orderRepository.deleteById(id);
     }
 
     @Override
@@ -113,12 +112,19 @@ public class OrderServiceImpl implements OrderService {
         return o;
     }
 
+//    @Override
+//    public Order buyOrder(Long orderId) {
+//        Order order = orderRepository.findById(orderId).orElseThrow(() ->  new NoOrderWithSuchIdException(orderId));
+//        order.setStatus(OrderStatus.IN_PROGRESS);
+//        order.setDate(utils.getCurrentDate());
+//        orderRepository.updateOrder(orderId, order.getStatus(), order.getDate(), null);
+//        return orderRepository.findById(orderId).get();
+//    }
+
     @Override
     public Order buyOrder(Long orderId) {
-        Order order = orderRepository.findById(orderId).orElseThrow(() ->  new NoOrderWithSuchIdException(orderId));
-        order.setStatus(OrderStatus.IN_PROGRESS);
-        order.setDate(utils.getCurrentDate());
-        return orderRepository.save(order);
+        orderRepository.updateOrderStatusAndDate(orderId, OrderStatus.IN_PROGRESS.toString(), utils.getCurrentDate());
+        return orderRepository.findById(orderId).orElseThrow(() ->  new NoOrderWithSuchIdException(orderId));
     }
 
     @Override
@@ -134,20 +140,27 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.save(o);
     }
 
+//    @Override
+//    public Order markOrderAsDone(Long orderId, Long salesmanId) {
+//
+//        Order o = orderRepository.findById(orderId).orElseThrow(() -> new NoOrderWithSuchIdException(orderId));
+//
+//        Salesman s = salesmanService.findById(salesmanId);
+//
+//        o.setStatus(OrderStatus.DONE);
+//        o.setDate(utils.getCurrentDate());
+//        o.setSalesman(s);
+//
+//        orderRepository.updateOrder(orderId, o.getStatus(), o.getDate(), salesmanId);
+//        return orderRepository.findById(orderId).get();
+////        return orderRepository.save(o);
+//    }
+
     @Override
     public Order markOrderAsDone(Long orderId, Long salesmanId) {
-
-        Order o = orderRepository.findById(orderId).orElseThrow(() -> new NoOrderWithSuchIdException(orderId));
-
-        Salesman s = salesmanService.findById(salesmanId);
-
-        o.setStatus(OrderStatus.DONE);
-        o.setDate(utils.getCurrentDate());
-        o.setSalesman(s);
-
-        return orderRepository.save(o);
+        orderRepository.updateOrder(orderId, OrderStatus.DONE.toString(), utils.getCurrentDate(), salesmanId);
+        return orderRepository.findById(orderId).orElseThrow(() -> new NoOrderWithSuchIdException(orderId));
     }
-
 
 
 

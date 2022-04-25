@@ -1,16 +1,14 @@
 package com.databases.shop.mapstruct.dtos.salesman;
 
-import com.databases.shop.models.Contacts;
 import com.databases.shop.models.PersonName;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.Date;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -21,9 +19,13 @@ public class SalesmanPostDto {
     @NotNull
     private PersonName personName;
 
-    @JsonProperty("contacts")
+    @JsonProperty("tel_nums")
     @NotNull
-    private Contacts contacts;
+    private Set<TelephoneDto> telephones;
+
+    @JsonProperty("email")
+    @NotNull
+    private String email;
 
     @JsonProperty("dateOfBirth")
     @NotNull
@@ -40,5 +42,4 @@ public class SalesmanPostDto {
     @JsonProperty("role")
     @NotNull
     private String role;
-
 }
