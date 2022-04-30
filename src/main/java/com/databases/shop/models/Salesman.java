@@ -33,11 +33,11 @@ public class Salesman {
     @Column(name = "salesman_email", length = 100)
     private String email;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     @Column(name = "date_of_birth", nullable = false)
     private Date dateOfBirth;
 
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(TemporalType.DATE)
     @Column(name = "date_of_hiring", nullable = false)
     private Date dateOfHiring;
 
