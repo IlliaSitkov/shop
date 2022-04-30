@@ -141,16 +141,16 @@ public class Utils {
 
 
 
-    public Date getCurrentDate() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        calendar.set(Calendar.HOUR_OF_DAY,0);
-        calendar.set(Calendar.MINUTE,0);
-        calendar.set(Calendar.SECOND,0);
-        calendar.set(Calendar.MILLISECOND,0);
-
-        return calendar.getTime();
-    }
+//    public Date getCurrentDate() {
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTime(new Date());
+//        calendar.set(Calendar.HOUR_OF_DAY,0);
+//        calendar.set(Calendar.MINUTE,0);
+//        calendar.set(Calendar.SECOND,0);
+//        calendar.set(Calendar.MILLISECOND,0);
+//
+//        return calendar.getTime();
+//    }
 
     private boolean isInvalidDateOfBirth(Date dateOfBirth, LocalDate currentDateL) {
         LocalDate dateOfBirthL = convertToLocalDateViaInstant(dateOfBirth);
@@ -163,7 +163,7 @@ public class Utils {
     }
 
     public void checkDates(Date dateOfBirth, Date dateOfHiring) {
-        LocalDate currentDate = convertToLocalDateViaInstant(getCurrentDate());
+        LocalDate currentDate = convertToLocalDateViaInstant(new Date());
         if (isInvalidDateOfBirth(dateOfBirth, currentDate) || isInvalidDateOfHiring(dateOfHiring, currentDate)) {
             throw new InvalidDatesException(Values.INVALID_DATE);
         }

@@ -123,7 +123,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order buyOrder(Long orderId) {
-        orderRepository.updateOrderStatusAndDate(orderId, OrderStatus.IN_PROGRESS.toString(), utils.getCurrentDate());
+        orderRepository.updateOrderStatusAndDate(orderId, OrderStatus.IN_PROGRESS.toString(), new Date());
         return orderRepository.findById(orderId).orElseThrow(() ->  new NoOrderWithSuchIdException(orderId));
     }
 
@@ -133,7 +133,7 @@ public class OrderServiceImpl implements OrderService {
         Order o = new Order();
         Customer customer = customerService.findById(orderPostDto.getCustomerId());
 
-        o.setDate(utils.getCurrentDate());
+        o.setDate(new Date());
         o.setCustomer(customer);
         o.setStatus(OrderStatus.NEW);
 
@@ -158,7 +158,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public Order markOrderAsDone(Long orderId, Long salesmanId) {
-        orderRepository.updateOrder(orderId, OrderStatus.DONE.toString(), utils.getCurrentDate(), salesmanId);
+        orderRepository.updateOrder(orderId, OrderStatus.DONE.toString(), new Date(), salesmanId);
         return orderRepository.findById(orderId).orElseThrow(() -> new NoOrderWithSuchIdException(orderId));
     }
 

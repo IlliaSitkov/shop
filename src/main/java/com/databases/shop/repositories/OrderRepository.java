@@ -89,7 +89,7 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
             "       status AS orderStatus\n" +
             "FROM (product_in_order INNER JOIN product ON product_articul = articul)\n" +
             "    INNER JOIN order_t ON id = order_id\n" +
-            "    WHERE date_created BETWEEN :dateStart AND :dateEnd\n" +
+            "    WHERE DATE(date_created) BETWEEN :dateStart AND :dateEnd\n" +
             "GROUP BY id\n" +
             "ORDER BY id", nativeQuery = true)
     Iterable<OrderReportValues> getOrderReportValues(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd);
@@ -98,14 +98,14 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
     @Query(value =
             "SELECT ROUND(COALESCE(SUM(CAST(prod_price*prod_quantity AS numeric)),0),2) AS income\n" +
             "FROM order_t INNER JOIN product_in_order ON id = order_id\n" +
-            "WHERE status = 'DONE' AND date_created BETWEEN :dateStart AND :dateEnd", nativeQuery = true)
+            "WHERE status = 'DONE' AND DATE(date_created) BETWEEN :dateStart AND :dateEnd", nativeQuery = true)
     double getFullIncome(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd);
 
 
     @Query(value =
             "SELECT COUNT(DISTINCT id) AS orderNum\n" +
             "FROM order_t INNER JOIN product_in_order ON id = order_id\n" +
-            "WHERE date_created BETWEEN :dateStart AND :dateEnd", nativeQuery = true)
+            "WHERE DATE(date_created) BETWEEN :dateStart AND :dateEnd", nativeQuery = true)
     int getOrdersNum(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd);
 
 
@@ -114,7 +114,7 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
             "FROM (\n" +
             "         SELECT SUM(prod_quantity*prod_price) AS orderCost\n" +
             "         FROM order_t INNER JOIN product_in_order ON id = order_id\n" +
-            "         WHERE date_created BETWEEN :dateStart AND :dateEnd\n" +
+            "         WHERE DATE(date_created) BETWEEN :dateStart AND :dateEnd\n" +
             "         GROUP BY id\n" +
             "     ) T", nativeQuery = true)
     int getAvgOrderCost(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd);
@@ -125,7 +125,7 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
             "FROM (\n" +
             "         SELECT status, SUM(prod_quantity*prod_price) AS orderCost\n" +
             "         FROM order_t INNER JOIN product_in_order ON id = order_id\n" +
-            "         WHERE date_created BETWEEN :dateStart AND :dateEnd\n" +
+            "         WHERE DATE(date_created) BETWEEN :dateStart AND :dateEnd\n" +
             "         GROUP BY id, status\n" +
             "     ) T\n" +
             "GROUP BY status\n" +

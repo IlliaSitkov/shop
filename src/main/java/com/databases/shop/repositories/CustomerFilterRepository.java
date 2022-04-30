@@ -53,12 +53,35 @@ public class CustomerFilterRepository {
                         "        )\n" +
                         "    )";
 
-        String hasAllOnlyCategoriesFilter =
-                "(:customerId < 0 OR NOT EXISTS(\n" +
-                        "SELECT *\n" +
-                        "FROM customer\n" +
-                        "WHERE NOT EXISTS(\n" +
-                        "        SELECT category_fk\n" +
+//        String hasAllOnlyCategoriesFilter =
+//                "(:customerId < 0 OR NOT EXISTS(\n" +
+//                        "SELECT *\n" +
+//                        "FROM customer\n" +
+//                        "WHERE NOT EXISTS(\n" +
+//                        "        SELECT category_fk\n" +
+//                        "        FROM ((product INNER JOIN product_in_order ON product.articul = product_articul)\n" +
+//                        "            INNER JOIN order_t ON product_in_order.order_id = order_t.id) CPRO\n" +
+//                        "        WHERE CPRO.customer_id = :customerId AND CPRO.status = 'DONE' AND NOT EXISTS(\n" +
+//                        "                SELECT *\n" +
+//                        "                FROM ((product INNER JOIN product_in_order ON product.articul = product_articul)\n" +
+//                        "                    INNER JOIN order_t ON product_in_order.order_id = order_t.id) CPRO1\n" +
+//                        "                WHERE CPRO1.category_fk = CPRO.category_fk AND CPRO1.status = 'DONE' AND CPRO1.customer_id = customer.id\n" +
+//                        "                )\n" +
+//                        "    ) AND NOT EXISTS (\n" +
+//                        "    SELECT category_fk\n" +
+//                        "    FROM ((product INNER JOIN product_in_order ON product.articul = product_articul)\n" +
+//                        "        INNER JOIN order_t ON product_in_order.order_id = order_t.id) CPRO\n" +
+//                        "    WHERE CPRO.status = 'DONE' AND CPRO.customer_id = customer.id AND category_fk NOT IN (\n" +
+//                        "        SELECT CPRO1.category_fk\n" +
+//                        "        FROM ((product INNER JOIN product_in_order ON product.articul = product_articul)\n" +
+//                        "            INNER JOIN order_t ON product_in_order.order_id = order_t.id) CPRO1\n" +
+//                        "        WHERE CPRO1.status = 'DONE' AND CPRO1.customer_id = :customerId\n" +
+//                        "    )\n" +
+//                        ")))";
+
+                String hasAllOnlyCategoriesFilter =
+                "(:customerId < 0 OR (NOT EXISTS(\n" +
+                        "        SELECT *\n" +
                         "        FROM ((product INNER JOIN product_in_order ON product.articul = product_articul)\n" +
                         "            INNER JOIN order_t ON product_in_order.order_id = order_t.id) CPRO\n" +
                         "        WHERE CPRO.customer_id = :customerId AND CPRO.status = 'DONE' AND NOT EXISTS(\n" +
@@ -66,18 +89,17 @@ public class CustomerFilterRepository {
                         "                FROM ((product INNER JOIN product_in_order ON product.articul = product_articul)\n" +
                         "                    INNER JOIN order_t ON product_in_order.order_id = order_t.id) CPRO1\n" +
                         "                WHERE CPRO1.category_fk = CPRO.category_fk AND CPRO1.status = 'DONE' AND CPRO1.customer_id = customer.id\n" +
-                        "                )\n" +
-                        "    ) AND NOT EXISTS (\n" +
-                        "    SELECT category_fk\n" +
-                        "    FROM ((product INNER JOIN product_in_order ON product.articul = product_articul)\n" +
-                        "        INNER JOIN order_t ON product_in_order.order_id = order_t.id) CPRO\n" +
-                        "    WHERE CPRO.status = 'DONE' AND CPRO.customer_id = customer.id AND category_fk NOT IN (\n" +
-                        "        SELECT CPRO1.category_fk\n" +
-                        "        FROM ((product INNER JOIN product_in_order ON product.articul = product_articul)\n" +
-                        "            INNER JOIN order_t ON product_in_order.order_id = order_t.id) CPRO1\n" +
-                        "        WHERE CPRO1.status = 'DONE' AND CPRO1.customer_id = :customerId\n" +
-                        "    )\n" +
-                        ")))";
+                        "            ))\n" +
+                        "          AND NOT EXISTS (SELECT *\n" +
+                        "                          FROM ((product INNER JOIN product_in_order ON product.articul = product_articul)\n" +
+                        "                              INNER JOIN order_t ON product_in_order.order_id = order_t.id) CPRO\n" +
+                        "                          WHERE CPRO.status = 'DONE' AND CPRO.customer_id = customer.id AND category_fk NOT IN (\n" +
+                        "                              SELECT CPRO1.category_fk\n" +
+                        "                              FROM ((product INNER JOIN product_in_order ON product.articul = product_articul)\n" +
+                        "                                  INNER JOIN order_t ON product_in_order.order_id = order_t.id) CPRO1\n" +
+                        "                              WHERE CPRO1.status = 'DONE' AND CPRO1.customer_id = :customerId\n" +
+                        "                          )\n" +
+                        "            )))";
 
         Query query = entityManager.createNativeQuery(
                 "SELECT *\n" +

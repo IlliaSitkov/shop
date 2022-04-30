@@ -72,7 +72,7 @@ public class OrderFilterRepository {
                         "    -- 5. дата створення замовлення збігається із вказаною\n" +
                         "    SELECT id\n" +
                         "    FROM order_t\n" +
-                        "    WHERE date_created = :mDate\n" +
+                        "    WHERE DATE(date_created) = :mDate\n" +
                         "    ))";
 
         String salesmanFilter =

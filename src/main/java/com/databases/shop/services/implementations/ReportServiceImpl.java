@@ -64,23 +64,23 @@ public class ReportServiceImpl implements ReportService {
             p.setAlignment(Element.ALIGN_CENTER);
             p.setSpacingAfter(smallRowGap);
 
-            String currentDate = formatDate(utils.getCurrentDate());
+            String currentDate = formatDate(new Date());
             Paragraph p1 = new Paragraph("Звіт складений "+currentDate, headerFont);
             p1.setAlignment(Element.ALIGN_LEFT);
             p1.setSpacingAfter(middleRowGap);
 
             double income = orderRepository.getFullIncome(dStart,dEnd);
-            Paragraph p2 = new Paragraph("Загальна сума прибутку: "+income +" грн", headerFont);
+            Paragraph p2 = new Paragraph("Загальна сума прибутку (сума вартості усіх виконаних замовлень): "+income +" грн", headerFont);
             p2.setAlignment(Element.ALIGN_LEFT);
             p2.setSpacingAfter(smallRowGap);
 
             int orderNum = orderRepository.getOrdersNum(dStart,dEnd);
-            Paragraph p3 = new Paragraph("Загальна кількість замовлень: "+orderNum, headerFont);
+            Paragraph p3 = new Paragraph("Загальна кількість непорожніх замовлень (без урахування статусу): "+orderNum, headerFont);
             p3.setAlignment(Element.ALIGN_LEFT);
             p3.setSpacingAfter(smallRowGap);
 
             int avgOrderCost = orderRepository.getAvgOrderCost(dStart,dEnd);
-            Paragraph p4 = new Paragraph("Середня вартість 1 замовлення: "+avgOrderCost+" грн", headerFont);
+            Paragraph p4 = new Paragraph("Середня вартість 1 замовлення (без урахування статусу): "+avgOrderCost+" грн", headerFont);
             p4.setAlignment(Element.ALIGN_LEFT);
             p4.setSpacingAfter(bigRowGap);
 
@@ -154,7 +154,7 @@ public class ReportServiceImpl implements ReportService {
             p.setAlignment(Element.ALIGN_CENTER);
             p.setSpacingAfter(smallRowGap);
 
-            String currentDate = formatDate(utils.getCurrentDate());
+            String currentDate = formatDate(new Date());
             Paragraph p1 = new Paragraph("Звіт складений "+ currentDate, headerFont);
             p1.setAlignment(Element.ALIGN_LEFT);
             p1.setSpacingAfter(middleRowGap);

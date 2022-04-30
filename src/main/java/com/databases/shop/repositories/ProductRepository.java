@@ -107,13 +107,13 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
                    "FROM product p LEFT OUTER JOIN\n" +
                          "(product_in_order JOIN order_t ON id = order_id) ON articul = product_articul\n" +
                    "WHERE (status = 'DONE' OR status IS NULL)\n" +
-                   "AND (date_created BETWEEN :dateStart AND :dateEnd) OR date_created IS NULL\n" +
+                   "AND (DATE(date_created) BETWEEN :dateStart AND :dateEnd) OR date_created IS NULL\n" +
                    "GROUP BY articul", nativeQuery = true)
     Iterable<ProductReportValues> productReport(LocalDate dateStart, LocalDate dateEnd);
 
     @Query(value = "SELECT COALESCE(SUM(prod_quantity),0) AS soldQuantity\n" +
                    "FROM product p JOIN\n" +
                         "(product_in_order JOIN order_t ON id = order_id) ON articul = product_articul\n" +
-                   "WHERE status = 'DONE' AND (date_created BETWEEN :dateStart AND :dateEnd)\n", nativeQuery = true)
+                   "WHERE status = 'DONE' AND (DATE(date_created) BETWEEN :dateStart AND :dateEnd)\n", nativeQuery = true)
     int getSoldProductsQuant(LocalDate dateStart, LocalDate dateEnd);
 }
