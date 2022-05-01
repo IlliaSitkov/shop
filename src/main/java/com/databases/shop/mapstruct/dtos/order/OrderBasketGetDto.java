@@ -35,6 +35,7 @@ public class OrderBasketGetDto {
 
     public void setProducts(Set<ProductInOrderGetDto> products) {
         this.products = products;
-        this.products.forEach(p -> this.cost += p.getCost());
+        this.products.forEach(p -> cost += p.getCost());
+        cost = Math.floor(cost*100)*0.01;
     }
 }

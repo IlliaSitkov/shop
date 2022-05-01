@@ -90,8 +90,8 @@ public interface OrderRepository extends JpaRepository<Order,Long> {
             "FROM (product_in_order INNER JOIN product ON product_articul = articul)\n" +
             "    INNER JOIN order_t ON id = order_id\n" +
             "    WHERE DATE(date_created) BETWEEN :dateStart AND :dateEnd\n" +
-            "GROUP BY id\n" +
-            "ORDER BY id", nativeQuery = true)
+            "GROUP BY id, date_created, status\n" +
+            "ORDER BY date_created", nativeQuery = true)
     Iterable<OrderReportValues> getOrderReportValues(@Param("dateStart") LocalDate dateStart, @Param("dateEnd") LocalDate dateEnd);
 
 

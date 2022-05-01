@@ -107,11 +107,7 @@ public class OrderFilterRepository {
                         "    )";
 
         String hasAllNotThoseProductsFilter =
-                "(:orderId < 0 OR id IN (\n" +
-                        "    -- 9. замовлення має усі не ті товари, що є у вказаному замовленні\n" +
-                        "    SELECT id\n" +
-                        "    FROM order_t\n" +
-                        "    WHERE NOT EXISTS(\n" +
+                "(:orderId < 0 OR NOT EXISTS(\n" +
                         "            SELECT *\n" +
                         "            FROM product\n" +
                         "            WHERE articul NOT IN (\n" +
@@ -126,7 +122,6 @@ public class OrderFilterRepository {
                         "                      AND order_id = id\n" +
                         "                )\n" +
                         "        )\n" +
-                        "    )\n" +
                         "    )";
 
         String moreThenKProviderProds =

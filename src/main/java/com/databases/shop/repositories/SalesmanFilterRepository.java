@@ -42,7 +42,7 @@ public class SalesmanFilterRepository {
                         "                SELECT articul\n" +
                         "                FROM product\n" +
                         "                WHERE category_fk = category.id AND EXISTS(\n" +
-                        "                        SELECT product_articul\n" +
+                        "                        SELECT *\n" +
                         "                        FROM product_in_order INNER JOIN order_t ot ON product_in_order.order_id = ot.id\n" +
                         "                        WHERE status = 'DONE' AND product_articul = articul AND salesman_id = salesman.id\n" +
                         "                    )\n" +
