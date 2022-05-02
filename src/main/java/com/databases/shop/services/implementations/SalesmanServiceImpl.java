@@ -108,14 +108,14 @@ public class SalesmanServiceImpl implements SalesmanService {
     }
 
     @Override
-    public Salesman update(Long id, Salesman salesman) {
+    public Salesman update(Long salesmanId, Salesman salesman) {
         salesman.setPersonName(utils.processPersonName(salesman.getPersonName()));
         utils.checkPersonName(salesman.getPersonName());
         salesman.getTelephones().forEach(t -> utils.checkPhoneNumber(t.getTelNumber()));
         utils.checkDates(salesman.getDateOfBirth(), salesman.getDateOfHiring());
-        deleteTelephonesNotInList(salesman.getTelephones());
+        deleteSalesmanTelephonesNotInList(salesmanId, salesman.getTelephones());
 
-        Salesman s = salesmanRepository.findById(id).orElseThrow(() -> new NoSalesmanWithSuchIdException(id));
+        Salesman s = salesmanRepository.findById(salesmanId).orElseThrow(() -> new NoSalesmanWithSuchIdException(salesmanId));
         salesman.getTelephones().forEach(t -> t.setSalesman(s));
         s.setPersonName(salesman.getPersonName());
         s.setTelephones(salesman.getTelephones());
@@ -124,8 +124,8 @@ public class SalesmanServiceImpl implements SalesmanService {
         return salesmanRepository.save(s);
     }
 
-    private void deleteTelephonesNotInList(Set<Telephone> goodTelephones) {
-        Iterable<Telephone> telephones = telephoneRepository.findAll();
+    private void deleteSalesmanTelephonesNotInList(Long salesmanId, Set<Telephone> goodTelephones) {
+        Iterable<Telephone> telephones = telephoneRepository.findSalesmanTelephones(salesmanId);
         Set<String> ids = goodTelephones.stream().map(Telephone::getTelNumber).collect(Collectors.toSet());
         telephones.forEach(t -> {
             if (!ids.contains(t.getTelNumber())) {

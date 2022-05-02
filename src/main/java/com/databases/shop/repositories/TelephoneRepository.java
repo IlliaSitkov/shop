@@ -19,4 +19,6 @@ public interface TelephoneRepository extends JpaRepository<Telephone, String> {
     void delete(@Param("telNumber") String telNumber);
 
 
+    @Query(value = "SELECT * FROM telephone WHERE salesman_id = :salesmanId", nativeQuery = true)
+    Iterable<Telephone> findSalesmanTelephones(@Param("salesmanId") Long salesmanId);
 }
